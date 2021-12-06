@@ -1,5 +1,8 @@
 #  https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
 spring:
+  main:
+    # https://stackoverflow.com/questions/70036903/spring-boot-application-fails-to-start-after-upgrading-to-2-6-0-due-to-circular
+    allow-circular-references: true
   jpa:
     show-sql: true
     open-in-view: false
