@@ -1,8 +1,10 @@
 package com.serheev.restaurant.util;
 
+import lombok.experimental.UtilityClass;
 import com.serheev.restaurant.error.IllegalRequestDataException;
 import com.serheev.restaurant.model.BaseEntity;
 
+@UtilityClass
 public class ValidationUtil {
 
     public static void checkNew(BaseEntity entity) {
