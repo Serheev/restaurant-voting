@@ -1,5 +1,6 @@
 package com.serheev.restaurant.repository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,6 +12,7 @@ import com.serheev.restaurant.model.User;
 import java.util.Optional;
 
 @Transactional(readOnly = true)
+@Tag(name = "User Controller")
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     @RestResource(rel = "by-email", path = "by-email")

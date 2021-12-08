@@ -1,8 +1,8 @@
-## TopJava Internship Graduation Project
+# TopJava Internship Graduation Project
 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.
 
-The task is:
+## The task is:
 
 Build a voting system for deciding where to have lunch.
 
@@ -23,3 +23,8 @@ As a result, provide a link to github repository. It should contain the code, RE
 P.S.: Make sure everything works with latest version that is on github :)  
 P.P.S.: Assume that your API will be used by a frontend developer to build frontend on top of that.
 -----------------------------
+
+## REST API documentation:
+### Swagger
+http://localhost:8080/swagger-ui.html <br>
+http://localhost:8080/v3/api-docs
