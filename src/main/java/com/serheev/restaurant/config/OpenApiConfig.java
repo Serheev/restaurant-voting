@@ -32,8 +32,7 @@ public class OpenApiConfig {
     public GroupedOpenApi api() {
         return GroupedOpenApi.builder()
                 .group("REST API")
-                .pathsToMatch("/api/**")
-                .pathsToExclude("/api/profile/**")
+                .pathsToMatch("/api/profile", "/api/profile/register", "/api/user/**", "/api/admin/**")
                 .build();
     }
 }

@@ -2,16 +2,24 @@ package com.serheev.restaurant.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.*;
-import org.springframework.util.StringUtils;
 import com.serheev.restaurant.util.JsonDeserializers;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Collection;
+import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -24,7 +32,7 @@ import java.util.Set;
 @ToString(callSuper = true, exclude = {"password"})
 public class User extends BaseEntity implements Serializable {
     public User(Integer id, String email, String firstName, String lastName, String password, Collection<Role> roles) {
-        this(email, firstName, lastName, password, EnumSet.copyOf(roles));
+        this(email, firstName, lastName, password, new Date(), EnumSet.copyOf(roles));
         this.id = id;
     }
 
@@ -47,6 +55,11 @@ public class User extends BaseEntity implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @JsonDeserialize(using = JsonDeserializers.PasswordDeserializer.class)
     private String password;
+
+    @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
+    @NotNull
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+    private Date registered = new Date();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
