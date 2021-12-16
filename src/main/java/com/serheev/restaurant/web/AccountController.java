@@ -1,5 +1,10 @@
 package com.serheev.restaurant.web;
 
+import com.serheev.restaurant.AuthUser;
+import com.serheev.restaurant.model.Role;
+import com.serheev.restaurant.model.User;
+import com.serheev.restaurant.repository.UserRepository;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,18 +19,23 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import com.serheev.restaurant.AuthUser;
-import com.serheev.restaurant.model.Role;
-import com.serheev.restaurant.model.User;
-import com.serheev.restaurant.repository.UserRepository;
-import com.serheev.restaurant.util.ValidationUtil;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.EnumSet;
+import java.util.List;
 
+import static com.serheev.restaurant.util.ValidationUtil.assureIdConsistent;
+import static com.serheev.restaurant.util.ValidationUtil.checkNew;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 /**
@@ -43,7 +53,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 @Slf4j
 @Tag(name = "Account Controller")
 public class AccountController implements RepresentationModelProcessor<RepositoryLinksResource> {
-    static final String URL = "/api/account";
+    static final String URL = "/api";
 
     @SuppressWarnings("unchecked")
     private static final RepresentationModelAssemblerSupport<User, EntityModel<User>> ASSEMBLER =
@@ -56,13 +66,22 @@ public class AccountController implements RepresentationModelProcessor<Repositor
 
     private final UserRepository userRepository;
 
-    @GetMapping(produces = MediaTypes.HAL_JSON_VALUE)
+    @Operation(summary = "Get user profile data", description = "Return logged in user data.")
+    @GetMapping(value = "/profile", produces = MediaTypes.HAL_JSON_VALUE)
     public EntityModel<User> get(@AuthenticationPrincipal AuthUser authUser) {
         log.info("get {}", authUser);
         return ASSEMBLER.toModel(authUser.getUser());
     }
 
-    @DeleteMapping
+    @Operation(summary = "Get all user data", description = "")
+    @GetMapping(value = "/admin/users", produces = MediaTypes.HAL_JSON_VALUE)
+    public List<User> getAll() {
+        log.info("getAll");
+        return userRepository.findAll();
+    }
+
+    @Operation(summary = "Delete own profile data", description = "This can only be done by the logged in user.")
+    @DeleteMapping(value = "/profile")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CacheEvict(value = "users", key = "#authUser.username")
     public void delete(@AuthenticationPrincipal AuthUser authUser) {
@@ -70,26 +89,28 @@ public class AccountController implements RepresentationModelProcessor<Repositor
         userRepository.deleteById(authUser.id());
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Register a new user", description = "This can be done by an anonymous user.")
+    @PostMapping(value = "/profile/register", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(value = HttpStatus.CREATED)
     public ResponseEntity<EntityModel<User>> register(@Valid @RequestBody User user) {
         log.info("register {}", user);
-        ValidationUtil.checkNew(user);
+        checkNew(user);
         user.setRoles(EnumSet.of(Role.USER));
         user = userRepository.save(user);
         URI uriOfNewResource = ServletUriComponentsBuilder.fromCurrentContextPath()
-                .path("/api/account")
+                .path(URL)
                 .build().toUri();
         return ResponseEntity.created(uriOfNewResource).body(ASSEMBLER.toModel(user));
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+    @Operation(summary = "Update user profile", description = "This can only be done by the logged in user.")
+    @PutMapping(value = "/profile", consumes = MediaType.APPLICATION_JSON_VALUE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @CachePut(value = "users", key = "#authUser.username")
     public User update(@Valid @RequestBody User user, @AuthenticationPrincipal AuthUser authUser) {
         log.info("update {} to {}", authUser, user);
         User oldUser = authUser.getUser();
-        ValidationUtil.assureIdConsistent(user, oldUser.id());
+        assureIdConsistent(user, oldUser.id());
         user.setRoles(oldUser.getRoles());
         if (user.getPassword() == null) {
             user.setPassword(oldUser.getPassword());
@@ -107,7 +128,7 @@ public class AccountController implements RepresentationModelProcessor<Repositor
 
     @Override
     public RepositoryLinksResource process(RepositoryLinksResource resource) {
-        resource.add(linkTo(AccountController.class).withRel("account"));
+        resource.add(linkTo(AccountController.class).withRel("profile"));
         return resource;
     }
 }

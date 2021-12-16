@@ -1,3 +1,5 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/048de5a817024c8cbbbf7387ac95a9f2)](https://www.codacy.com/gh/Serheev/restaurant-voting/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Serheev/restaurant-voting&amp;utm_campaign=Badge_Grade)
+
 # TopJava Internship Graduation Project
 
 Design and implement a REST API using Hibernate/Spring/SpringMVC (or Spring-Boot) **without frontend**.
