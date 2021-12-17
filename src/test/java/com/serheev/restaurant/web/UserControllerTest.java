@@ -55,7 +55,7 @@ class UserControllerTest extends AbstractControllerTest {
     @Test
     @WithUserDetails(value = USER_MAIL)
     void getForbidden() throws Exception {
-        perform(MockMvcRequestBuilders.get(URL))
+        perform(MockMvcRequestBuilders.get("/api/admin/users"))
                 .andExpect(status().isForbidden());
     }
 

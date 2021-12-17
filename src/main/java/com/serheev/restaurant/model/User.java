@@ -17,8 +17,8 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Collection;
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -53,7 +53,7 @@ public class User extends BaseEntity implements Serializable {
     @Column(name = "registered", nullable = false, columnDefinition = "timestamp default now()", updatable = false)
     @NotNull
     @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-    private Date registered = new Date();
+    private LocalDate date = LocalDate.now();
 
     @Enumerated(EnumType.STRING)
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id", "role"}, name = "user_roles_unique")})
@@ -62,7 +62,7 @@ public class User extends BaseEntity implements Serializable {
     private Set<Role> roles;
 
     public User(Integer id, String email, String firstName, String lastName, String password, Collection<Role> roles) {
-        this(email, firstName, lastName, password, new Date(), EnumSet.copyOf(roles));
+        this(email, firstName, lastName, password, LocalDate.now(), EnumSet.copyOf(roles));
         this.id = id;
     }
 
