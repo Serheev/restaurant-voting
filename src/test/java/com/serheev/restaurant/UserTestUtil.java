@@ -1,6 +1,7 @@
 package com.serheev.restaurant;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import lombok.experimental.UtilityClass;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
 import com.serheev.restaurant.model.Role;
@@ -13,6 +14,7 @@ import java.util.function.BiConsumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@UtilityClass
 public class UserTestUtil {
     public static final int USER_ID = 1;
     public static final int ADMIN_ID = 2;

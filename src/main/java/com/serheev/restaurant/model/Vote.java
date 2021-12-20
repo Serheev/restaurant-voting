@@ -44,4 +44,12 @@ public class Vote extends BaseEntity implements Serializable {
     @JoinColumn(name = "restaurant_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Restaurant restaurant;
+
+
+    public Vote(Integer id, LocalDate date, User user, Restaurant restaurant) {
+        this.id = id;
+        this.date = date;
+        this.user = user;
+        this.restaurant = restaurant;
+    }
 }

@@ -11,12 +11,13 @@ INSERT INTO RESTAURANT (NAME, ADDRESS)
 VALUES ('Kuvshin', 'Fedorova Street, 10, Kyiv (Kiev) 03150 Ukraine'),
        ('BEEF Meat & Wine', 'Shota Rustaveli Street, 11, Kyiv (Kiev) 01001 Ukraine'),
        ('Genatsvale&Hinkali', 'Dragomanova Street, 17, Kyiv (Kiev) 02068 Ukraine'),
-       ('Musafir', 'Saksaganskogo Street, 57А, Kyiv (Kiev) 02000 Ukraine');
+       ('Musafir', 'Saksaganskogo Street, 57А, Kyiv (Kiev) 02000 Ukraine'),
+       ('Red Meat', 'Shota Rustaveli Street, 18, Kyiv (Kiev) 01001 Ukraine');
 
 INSERT INTO MENU (ADDED, RESTAURANT_ID)
 VALUES (CURRENT_TIMESTAMP(), 1),
        (CURRENT_TIMESTAMP(), 2),
-       ('2020-12-15', 3),
+       ('2021-12-15', 3),
        (CURRENT_TIMESTAMP(), 4);
 
 INSERT INTO DISH (NAME, PRICE, MENU_ID)
@@ -35,3 +36,10 @@ VALUES ('Wagyu beef steak', 400, 1),
        ('Buddha Jump Over the Wall Soup', 190, 3),
        ('Puffer fish', 190, 4),
        ('Von Essen Platinum Club Sandwich', 197, 4);
+
+INSERT INTO VOTE (VOTED, RESTAURANT_ID, USER_ID)
+VALUES ('2021-12-15', 3, 1),
+       ('2021-12-16', 3, 1),
+       ('2021-12-17', 3, 2),
+       ('2021-12-19', 3, 1),
+       (CURRENT_TIMESTAMP(), 1, 2);

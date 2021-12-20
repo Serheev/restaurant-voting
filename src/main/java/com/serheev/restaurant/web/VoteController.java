@@ -25,8 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
-import static com.serheev.restaurant.util.VoteUtil.ifChangeAvailable;
+import static com.serheev.restaurant.util.VoteUtil.ifChangeNotAvailable;
 
 @RestController
 @RequestMapping(value = VoteController.URL, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -59,9 +60,10 @@ public class VoteController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void changeVote(@RequestParam int restaurantId, @AuthenticationPrincipal AuthUser authUser) {
         log.info("Change vote user {} for restaurant {}", authUser.id(), restaurantId);
-        ifChangeAvailable(LocalTime.now());
         Restaurant restaurant = restaurantRepository.findById(restaurantId).orElseThrow(() -> new NotFoundException("Restaurant not found: id=" + restaurantId));
-        Vote vote = voteRepository.findByDate(LocalDate.now(), authUser.id()).orElseThrow(() -> new NotFoundException("Vote not Found"));
+        List<Vote> votes = voteRepository.findLastByUser(authUser.id());
+        Vote vote = votes.stream().findFirst().orElseThrow(() -> new NotFoundException("Vote not Found"));
+        ifChangeNotAvailable(LocalTime.now(), vote.getDate());
         vote.setRestaurant(restaurant);
         voteRepository.save(vote);
     }

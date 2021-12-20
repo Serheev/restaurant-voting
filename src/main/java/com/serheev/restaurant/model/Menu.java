@@ -50,4 +50,11 @@ public class Menu extends BaseEntity implements Serializable {
     @JoinColumn(name = "menu_id") //https://stackoverflow.com/a/62848296/548473
     @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Dish> dishes;
+
+    public Menu(Integer id, LocalDate date, Restaurant restaurant, List<Dish> dishes) {
+        this.id = id;
+        this.date = date;
+        this.restaurant = restaurant;
+        this.dishes = dishes;
+    }
 }

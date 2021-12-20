@@ -17,7 +17,7 @@ import javax.validation.constraints.Size;
 @Table(name = "dish")
 @Getter
 @Setter
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @NoArgsConstructor
 public class Dish {
 

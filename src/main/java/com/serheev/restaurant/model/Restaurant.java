@@ -28,4 +28,10 @@ public class Restaurant extends BaseEntity implements Serializable {
     @Column(name = "address")
     @Size(max = 128)
     private String address;
+
+    public Restaurant(Integer id, String name, String address) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+    }
 }
